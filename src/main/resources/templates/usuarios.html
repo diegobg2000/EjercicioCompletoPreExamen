@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Usuarios</title>
+  </head>
+  <body>
+    <h1>/usuarios --> usuarios.html</h1>
+    
+    <!-- TABLA DE VISUALIZACION DE LOS USUARIOS -->
+    
+				    <table class="table table-dark table-hover table-sm ">
+				      <tr>
+				        <th>Usuario</th>
+				        <th>Contraseña</th>
+				        <th>Nombre</th>
+				        <th>Edad</th>
+				        <th>Fecha</th>
+				  		<th>Rol</th>
+				  		<th>Eliminar</th>
+				  		<th>Editar</th>
+				  		
+				        	
+				      </tr>
+				      <tr th:each="user: ${usuarios}">
+				        <td th:text="${user.usuario}"></td>
+				        <td th:text="${user.contrasena}"></td>
+				        <td th:text="${user.nombre}"></td>
+				        <td th:text="${user.edad}"></td>
+				        <td th:text="${user.fecha}"></td>
+				  	  	<td th:text="${user.rol.credencial}"></td> 	        
+				        
+ 													
+ 						
+						<!--  PINTAR -->
+							
+							
+							<td >
+				          	<span th:remove="tag" th:if=" (${#authorization.expression('hasAnyAuthority(''ADMIN'',''MODERADOR'')')}) or (${#authentication.name} == ${user.usuario})">  
+				          <a type="button" class="btn btn-danger btn-sm" th:href="@{/usuarios/eliminar/{usuario}(usuario=${user.usuario})}">Eliminar</a>
+							 </span> 
+							 </td>
+						 
+						
+						<td >
+				          	<span th:remove="tag" th:if=" (${#authorization.expression('hasAnyAuthority(''ADMIN'',''MODERADOR'')')}) or (${#authentication.name} == ${user.usuario})">  
+					        	<a type="button" class="btn btn-warning btn-sm" th:href="@{/usuarios/editar/{id}(id=${user.usuario})}">Editar</a>
+							</span> 
+						</td>
+						
+
+						         
+				      </tr>
+				    </table>
+				    
+				    
+				    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#crearMensaje" >
+							Nuevo Usuario
+					</button>
+					
+					<a class="btn btn-success" href="/addCarrito">Añadir producto</a>
+				    
+				    
+				    
+		<!-- VENTANA MODAL -->
+		  <div class="modal fade" id="crearMensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		    <div class="modal-dialog" role="document">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <h4 class="modal-title" id="exampleModalLabel">Nuevo Usuario</h4>
+		          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+		            <span aria-hidden="true">×</span>
+		          </button>
+		        </div>
+
+                <form action="#" th:action="@{/usuarios/anadir}" th:object="${usuario}" method="post">
+			        <div class="modal-body">
+			        		<div class="form-row">
+						    <div class="form-group col-md-12">
+						      <label for="nombre">Nombre de Usuario</label>
+						      <input type="text" th:field="*{usuario}"  placeholder="Usuario" class="form-control" id="usuario">
+						    </div>
+		                  </div>
+		                  
+						  <div class="form-row">
+						    <div class="form-group col-md-12">
+						      <label for="contrasena">Contraseña</label>
+						      <input type="password" th:field="*{contrasena}"  placeholder="*******" class="form-control" id="contrasena">
+						    </div>
+		                  </div>
+		                  
+		                  <div class="form-row">
+						    <div class="form-group col-md-12">
+						      <label for="nombre">Nombre</label>
+						      <input type="text" th:field="*{nombre}"  placeholder="Nombre" class="form-control" id="nombre">
+						    </div>
+		                  </div>
+		                  
+		                   <div class="form-row">
+						    <div class="form-group col-md-12">
+						      <label for="edad">Edad</label>
+						      <input type="number" th:field="*{edad}"  placeholder="Edad" class="form-control" id="edad">
+						    </div>
+		                  </div>
+		                  
+		                  
+		                
+		                  
+		                  <div class="form-row">
+						    <div class="form-group col-md-12">
+						      <label for="fecha">Fecha</label>
+						      <input type="date" th:field="*{fecha}"  placeholder="Fecha" class="form-control" id="fecha">
+						    </div>
+		                  </div>
+		                  
+		                  
+		              <div class="form-row">
+
+					    <div class="form-group col-md-12">
+					      <label for="texto">Permisos</label>
+							<ul>
+							  <li th:each="permiso: ${roles}">
+							    <input 
+							    	type="radio" 
+							    	name="permisos" 
+							        th:text="${permiso.credencial}"
+							        th:field="*{rol.credencial}"
+							        th:value="${permiso.credencial}"
+							    />
+							  </li>
+							</ul>					      
+						  </div>
+	                  </div>	                  
+		                  
+		                  
+		                  
+			        </div>
+			        <div class="modal-footer">
+		                <input type="submit" value="Añadir" class="btn btn-primary float-right">
+		                <button data-dismiss="modal" class="btn btn-outline-danger float-right mr-2">Cancelar</button>
+			        </div>
+                </form>
+		      </div>
+		    </div>
+		  </div>
+		
+				    
+				    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
